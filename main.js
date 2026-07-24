@@ -457,6 +457,7 @@ async function downloadWithYtDlp(url, outputDir = null, downloadId, platformInfo
 
     // Build yt-dlp command with enhanced platform support (BitzyStreamGO optimized)
     const args = [
+      '--ignore-config',
       '--no-check-certificate',
       '--no-warnings',
       '--progress',
