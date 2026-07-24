@@ -1,123 +1,76 @@
-<div align="center">
+# Media Downloader
 
-  <img src="public/icon.svg" alt="MediaDownloader Logo" width="120" height="120" />
+Universal Media & Video Downloader Engine with Smart MD5 Instant Cache.
 
-  # ⚡ MEDIA DOWNLOADER
+[![Version](https://img.shields.io/badge/version-1.2.0-27272a.svg?style=flat-square)](https://github.com/bicknicktick/media-downloader)
+[![License](https://img.shields.io/badge/license-MIT-27272a.svg?style=flat-square)](LICENSE)
+[![Engine](https://img.shields.io/badge/engine-yt--dlp-27272a.svg?style=flat-square)](https://github.com/yt-dlp/yt-dlp)
 
-  **Universal Media & Video Downloader Engine with Smart MD5 Instant Cache**
+A clean, minimalist desktop application and local engine for downloading media from 1000+ platforms with zero-delay MD5 URL caching.
 
-  [![Version](https://img.shields.io/badge/version-1.2.0-00f2ea.svg?style=for-the-badge)](https://github.com/bicknicktick/media-downloader)
-  [![License](https://img.shields.io/badge/license-MIT-7928ca.svg?style=for-the-badge)](LICENSE)
-  [![yt-dlp](https://img.shields.io/badge/engine-yt--dlp-10b981.svg?style=for-the-badge)](https://github.com/yt-dlp/yt-dlp)
-  [![Author](https://img.shields.io/badge/crafted_by-bitzy.id-ff007f.svg?style=for-the-badge)](https://bitzy.id)
+---
 
-  ---
+## Features
 
-  *A sleek, high-performance desktop application and headless engine for downloading video, audio, and media assets from 1000+ platforms with zero-delay MD5 caching.*
+- **Smart MD5 Instant Cache**: Hashes target URL & quality. Repeated downloads skip network requests instantly (100% progress in <100ms).
+- **Minimalist Dark Interface**: Designed with a clean Raycast/Linear aesthetic, high contrast typography, and real-time SSE progress tracking.
+- **1000+ Platforms**: Works out of the box with YouTube, TikTok (No Watermark), Instagram Reels, Pinterest, Twitter/X, Douyin, Bilibili, Xiaohongshu, Twitch, and more.
+- **Embedded API (Port 31720)**: Embedded Express server with Server-Sent Events (SSE) for programmatic downloads and progress streaming.
+- **Fail-safes**: Bypasses 403 errors, socket retries, and automatic temp artifact management.
 
-</div>
+---
 
-<br />
+## Tech Stack
 
-## ✨ Key Features
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React 18, Inter Font, Clean Dark CSS |
+| **App Shell** | Electron 28 |
+| **API Engine** | Express.js, Server-Sent Events (Port 31720) |
+| **Downloader** | `yt-dlp` Subprocess |
+| **Caching** | Node `crypto` (MD5 Hash Table) |
 
-- ⚡ **Smart MD5 Instant Cache**: Automatically hashes target URL & quality configuration. Repeated downloads skip network requests instantly (100% progress in <100ms).
-- 🎨 **Cyberpunk Glassmorphism UI**: Built with React 18, Plus Jakarta Sans, and Outfit fonts with real-time SSE progress tracking.
-- 🌐 **1000+ Platforms Supported**: Full support for YouTube (4K/HD), TikTok (Watermark-Free), Instagram Reels, Pinterest, Twitter/X, Douyin, Bilibili, Xiaohongshu (RedNote), Twitch, and more.
-- 📡 **Embedded Express & SSE API**: Integrated HTTP API (`http://localhost:31720`) with Server-Sent Events for seamless programmatic integration.
-- 🛡️ **Bypasses & Fail-safes**: Built-in HTTP 403 bypasses, custom extractor arguments (`player_client=web,android`), socket retries, and automatic temp artifact cleanup.
+---
 
-<br />
-
-## 🛠️ Tech Stack & Architecture
-
-```mermaid
-graph TD
-    User([👤 User / API Client]) -->|IPC / HTTP API| Express[⚡ Express API Server :31720]
-    Express -->|POST /api/download| DownloaderEngine[🎬 Downloader Core]
-    DownloaderEngine -->|1. MD5 Hash Lookup| CacheCheck{📦 Cache Hit in /tmp?}
-    CacheCheck -->|Yes| InstantCopy[⚡ Instant Copy & SSE 100%]
-    CacheCheck -->|No| YtDlpEngine[⚙️ yt-dlp Subprocess]
-    YtDlpEngine -->|Fetch & Remux MP4| Storage[📁 Downloads Directory]
-    YtDlpEngine -->|Save Hash Copy| TempCache[💾 /tmp Cache Store]
-    DownloaderEngine -->|SSE Stream| ReactUI[🎨 Cyberpunk React UI]
-```
-
-| Component | Technology | Description |
-| :--- | :--- | :--- |
-| **Frontend UI** | React 18, CSS Glassmorphism | Custom dark glass UI with live status indicators |
-| **Desktop Shell** | Electron 28 | Cross-platform desktop shell |
-| **Local API** | Express.js, CORS, SSE | Port `31720` HTTP API for progress streaming |
-| **Core Downloader** | `yt-dlp` | Industry standard media extraction CLI |
-| **Cache Layer** | Node `crypto` (MD5) | Zero-delay duplicate request bypass |
-
-<br />
-
-## 🚀 Getting Started
-
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **yt-dlp**: Installed and available in PATH or `/usr/local/bin/yt-dlp`
-- **ffmpeg**: Installed for remuxing and container merging
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
+# Clone repository
 git clone https://github.com/bicknicktick/media-downloader.git
 cd media-downloader
 
 # Install dependencies
 npm install
 
-# Run in Development Mode
+# Start development app
 npm start
 
-# Build Production Frontend Bundle
+# Build production bundle
 npm run build
 ```
 
-<br />
+---
 
-## 📡 API Reference (Port 31720)
+## API Documentation
 
-### 1. Detect Platform
+### Detect Platform
 ```http
 POST /api/detect-platform
 Content-Type: application/json
 
-{
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-}
+{ "url": "https://www.youtube.com/watch?v=example" }
 ```
 
-### 2. Trigger Download
+### Trigger Download
 ```http
 POST /api/download
 Content-Type: application/json
 
-{
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-  "outputDir": "/home/user/Downloads"
-}
-```
-*Returns `{ "downloadId": "..." }`*
-
-### 3. Stream Progress (SSE)
-```http
-GET /api/progress/:downloadId
-Accept: text/event-stream
+{ "url": "https://www.youtube.com/watch?v=example", "outputDir": "/home/user/Downloads" }
 ```
 
-<br />
+---
 
-## 👤 Author & Credits
+## License
 
-- **Repository**: [bicknicktick/media-downloader](https://github.com/bicknicktick/media-downloader)
-- **Crafted with ❤️ by**: [bitzy.id](https://bitzy.id) (`contact@e.bitzy.id`)
-
-<br />
-
-<div align="center">
-  <sub>© 2026 MediaDownloader by bitzy.id. Released under the MIT License.</sub>
-</div>
+MIT © [bicknicktick](https://github.com/bicknicktick) & [bitzy.id](https://bitzy.id)

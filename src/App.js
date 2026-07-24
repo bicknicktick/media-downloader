@@ -323,15 +323,14 @@ function App() {
       <header className="app-header">
         <div className="header-content">
           <div className="header-brand">
-            <div className="brand-icon-wrapper">⚡</div>
+            <div className="brand-icon-wrapper">↓</div>
             <div className="brand-text">
-              <h1>MEDIA DOWNLOADER</h1>
-              <p>1000+ Platforms • Smart MD5 Cache • <span className="brand-tag">bitzy.id</span></p>
+              <h1>Media Downloader <span className="brand-version">v1.2.0</span></h1>
             </div>
           </div>
           <div className="header-status">
             <div className="status-dot"></div>
-            <span>Engine Active</span>
+            <span>Ready</span>
           </div>
         </div>
       </header>
